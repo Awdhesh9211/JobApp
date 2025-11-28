@@ -1,5 +1,7 @@
-package com.awdhx.JobApp.job;
+package com.awdhx.JobApp.job.controller;
 
+import com.awdhx.JobApp.job.service.JobService;
+import com.awdhx.JobApp.job.entity.Job;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +19,12 @@ public class JobController {
     }
 
 //    API
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<List<Job>>  findAll(){
         return ResponseEntity.ok(jobService.findAll());
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<String> createJobs(@RequestBody Job job){
         jobService.createJob(job);
         return new ResponseEntity<>("Job Created Sucess",HttpStatus.CREATED);
@@ -39,11 +41,9 @@ public class JobController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletejobByid(@PathVariable Long id){
-        Job job = jobService.getJobById(id);
-        if(job == null)
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        jobService.deleteJobById(id);
-        return new ResponseEntity<>("deleted successfully!",HttpStatus.OK);
+        if(jobService.deleteJobById(id))
+            return new ResponseEntity<>("deleted successfully!",HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PutMapping("/{id}")
